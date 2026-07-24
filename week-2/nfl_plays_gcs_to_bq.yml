@@ -1,0 +1,953 @@
+id: nfl_plays_gcs_to_bq
+namespace: zoomcamp.nfl
+
+pluginDefaults:
+  - type: io.kestra.plugin.gcp
+    values:
+      serviceAccount: "{{ secret('GCP_CREDS') }}"
+      projectId: "{{ kv('GCP_PROJECT_ID') }}"
+
+tasks:
+  - id: load_plays_as_string
+    type: io.kestra.plugin.gcp.bigquery.LoadFromGcs
+    from:
+      - "gs://de-zoomcamp-501902-bucket/nfl/plays.csv"
+    destinationTable: "{{ kv('GCP_PROJECT_ID') }}.{{ kv('GCP_DATASET') }}.plays_staging"
+    format: CSV
+    autodetect: false
+    writeDisposition: WRITE_TRUNCATE
+    csvOptions:
+      skipLeadingRows: 1
+      fieldDelimiter: ","
+      allowQuotedNewLines: true
+    schema:
+      fields:
+        - name: play_id
+          type: STRING
+        - name: game_id
+          type: STRING
+        - name: home_team
+          type: STRING
+        - name: away_team
+          type: STRING
+        - name: posteam
+          type: STRING
+        - name: posteam_type
+          type: STRING
+        - name: defteam
+          type: STRING
+        - name: side_of_field
+          type: STRING
+        - name: yardline_100
+          type: STRING
+        - name: game_date
+          type: STRING
+        - name: quarter_seconds_remaining
+          type: STRING
+        - name: half_seconds_remaining
+          type: STRING
+        - name: game_seconds_remaining
+          type: STRING
+        - name: game_half
+          type: STRING
+        - name: quarter_end
+          type: STRING
+        - name: drive
+          type: STRING
+        - name: sp
+          type: STRING
+        - name: qtr
+          type: STRING
+        - name: down
+          type: STRING
+        - name: goal_to_go
+          type: STRING
+        - name: time
+          type: STRING
+        - name: yrdln
+          type: STRING
+        - name: ydstogo
+          type: STRING
+        - name: ydsnet
+          type: STRING
+        - name: desc
+          type: STRING
+        - name: play_type
+          type: STRING
+        - name: yards_gained
+          type: STRING
+        - name: shotgun
+          type: STRING
+        - name: no_huddle
+          type: STRING
+        - name: qb_dropback
+          type: STRING
+        - name: qb_kneel
+          type: STRING
+        - name: qb_spike
+          type: STRING
+        - name: qb_scramble
+          type: STRING
+        - name: pass_length
+          type: STRING
+        - name: pass_location
+          type: STRING
+        - name: air_yards
+          type: STRING
+        - name: yards_after_catch
+          type: STRING
+        - name: run_location
+          type: STRING
+        - name: run_gap
+          type: STRING
+        - name: field_goal_result
+          type: STRING
+        - name: kick_distance
+          type: STRING
+        - name: extra_point_result
+          type: STRING
+        - name: two_point_conv_result
+          type: STRING
+        - name: home_timeouts_remaining
+          type: STRING
+        - name: away_timeouts_remaining
+          type: STRING
+        - name: timeout
+          type: STRING
+        - name: timeout_team
+          type: STRING
+        - name: td_team
+          type: STRING
+        - name: posteam_timeouts_remaining
+          type: STRING
+        - name: defteam_timeouts_remaining
+          type: STRING
+        - name: total_home_score
+          type: STRING
+        - name: total_away_score
+          type: STRING
+        - name: posteam_score
+          type: STRING
+        - name: defteam_score
+          type: STRING
+        - name: score_differential
+          type: STRING
+        - name: posteam_score_post
+          type: STRING
+        - name: defteam_score_post
+          type: STRING
+        - name: score_differential_post
+          type: STRING
+        - name: no_score_prob
+          type: STRING
+        - name: opp_fg_prob
+          type: STRING
+        - name: opp_safety_prob
+          type: STRING
+        - name: opp_td_prob
+          type: STRING
+        - name: fg_prob
+          type: STRING
+        - name: safety_prob
+          type: STRING
+        - name: td_prob
+          type: STRING
+        - name: extra_point_prob
+          type: STRING
+        - name: two_point_conversion_prob
+          type: STRING
+        - name: ep
+          type: STRING
+        - name: epa
+          type: STRING
+        - name: total_home_epa
+          type: STRING
+        - name: total_away_epa
+          type: STRING
+        - name: total_home_rush_epa
+          type: STRING
+        - name: total_away_rush_epa
+          type: STRING
+        - name: total_home_pass_epa
+          type: STRING
+        - name: total_away_pass_epa
+          type: STRING
+        - name: air_epa
+          type: STRING
+        - name: yac_epa
+          type: STRING
+        - name: comp_air_epa
+          type: STRING
+        - name: comp_yac_epa
+          type: STRING
+        - name: total_home_comp_air_epa
+          type: STRING
+        - name: total_away_comp_air_epa
+          type: STRING
+        - name: total_home_comp_yac_epa
+          type: STRING
+        - name: total_away_comp_yac_epa
+          type: STRING
+        - name: total_home_raw_air_epa
+          type: STRING
+        - name: total_away_raw_air_epa
+          type: STRING
+        - name: total_home_raw_yac_epa
+          type: STRING
+        - name: total_away_raw_yac_epa
+          type: STRING
+        - name: wp
+          type: STRING
+        - name: def_wp
+          type: STRING
+        - name: home_wp
+          type: STRING
+        - name: away_wp
+          type: STRING
+        - name: wpa
+          type: STRING
+        - name: home_wp_post
+          type: STRING
+        - name: away_wp_post
+          type: STRING
+        - name: total_home_rush_wpa
+          type: STRING
+        - name: total_away_rush_wpa
+          type: STRING
+        - name: total_home_pass_wpa
+          type: STRING
+        - name: total_away_pass_wpa
+          type: STRING
+        - name: air_wpa
+          type: STRING
+        - name: yac_wpa
+          type: STRING
+        - name: comp_air_wpa
+          type: STRING
+        - name: comp_yac_wpa
+          type: STRING
+        - name: total_home_comp_air_wpa
+          type: STRING
+        - name: total_away_comp_air_wpa
+          type: STRING
+        - name: total_home_comp_yac_wpa
+          type: STRING
+        - name: total_away_comp_yac_wpa
+          type: STRING
+        - name: total_home_raw_air_wpa
+          type: STRING
+        - name: total_away_raw_air_wpa
+          type: STRING
+        - name: total_home_raw_yac_wpa
+          type: STRING
+        - name: total_away_raw_yac_wpa
+          type: STRING
+        - name: punt_blocked
+          type: STRING
+        - name: first_down_rush
+          type: STRING
+        - name: first_down_pass
+          type: STRING
+        - name: first_down_penalty
+          type: STRING
+        - name: third_down_converted
+          type: STRING
+        - name: third_down_failed
+          type: STRING
+        - name: fourth_down_converted
+          type: STRING
+        - name: fourth_down_failed
+          type: STRING
+        - name: incomplete_pass
+          type: STRING
+        - name: touchback
+          type: STRING
+        - name: interception
+          type: STRING
+        - name: punt_inside_twenty
+          type: STRING
+        - name: punt_in_endzone
+          type: STRING
+        - name: punt_out_of_bounds
+          type: STRING
+        - name: punt_downed
+          type: STRING
+        - name: punt_fair_catch
+          type: STRING
+        - name: kickoff_inside_twenty
+          type: STRING
+        - name: kickoff_in_endzone
+          type: STRING
+        - name: kickoff_out_of_bounds
+          type: STRING
+        - name: kickoff_downed
+          type: STRING
+        - name: kickoff_fair_catch
+          type: STRING
+        - name: fumble_forced
+          type: STRING
+        - name: fumble_not_forced
+          type: STRING
+        - name: fumble_out_of_bounds
+          type: STRING
+        - name: solo_tackle
+          type: STRING
+        - name: safety
+          type: STRING
+        - name: penalty
+          type: STRING
+        - name: tackled_for_loss
+          type: STRING
+        - name: fumble_lost
+          type: STRING
+        - name: own_kickoff_recovery
+          type: STRING
+        - name: own_kickoff_recovery_td
+          type: STRING
+        - name: qb_hit
+          type: STRING
+        - name: rush_attempt
+          type: STRING
+        - name: pass_attempt
+          type: STRING
+        - name: sack
+          type: STRING
+        - name: touchdown
+          type: STRING
+        - name: pass_touchdown
+          type: STRING
+        - name: rush_touchdown
+          type: STRING
+        - name: return_touchdown
+          type: STRING
+        - name: extra_point_attempt
+          type: STRING
+        - name: two_point_attempt
+          type: STRING
+        - name: field_goal_attempt
+          type: STRING
+        - name: kickoff_attempt
+          type: STRING
+        - name: punt_attempt
+          type: STRING
+        - name: fumble
+          type: STRING
+        - name: complete_pass
+          type: STRING
+        - name: assist_tackle
+          type: STRING
+        - name: lateral_reception
+          type: STRING
+        - name: lateral_rush
+          type: STRING
+        - name: lateral_return
+          type: STRING
+        - name: lateral_recovery
+          type: STRING
+        - name: passer_player_id
+          type: STRING
+        - name: passer_player_name
+          type: STRING
+        - name: receiver_player_id
+          type: STRING
+        - name: receiver_player_name
+          type: STRING
+        - name: rusher_player_id
+          type: STRING
+        - name: rusher_player_name
+          type: STRING
+        - name: lateral_receiver_player_id
+          type: STRING
+        - name: lateral_receiver_player_name
+          type: STRING
+        - name: lateral_rusher_player_id
+          type: STRING
+        - name: lateral_rusher_player_name
+          type: STRING
+        - name: lateral_sack_player_id
+          type: STRING
+        - name: lateral_sack_player_name
+          type: STRING
+        - name: interception_player_id
+          type: STRING
+        - name: interception_player_name
+          type: STRING
+        - name: lateral_interception_player_id
+          type: STRING
+        - name: lateral_interception_player_name
+          type: STRING
+        - name: punt_returner_player_id
+          type: STRING
+        - name: punt_returner_player_name
+          type: STRING
+        - name: lateral_punt_returner_player_id
+          type: STRING
+        - name: lateral_punt_returner_player_name
+          type: STRING
+        - name: kickoff_returner_player_name
+          type: STRING
+        - name: kickoff_returner_player_id
+          type: STRING
+        - name: lateral_kickoff_returner_player_id
+          type: STRING
+        - name: lateral_kickoff_returner_player_name
+          type: STRING
+        - name: punter_player_id
+          type: STRING
+        - name: punter_player_name
+          type: STRING
+        - name: kicker_player_name
+          type: STRING
+        - name: kicker_player_id
+          type: STRING
+        - name: own_kickoff_recovery_player_id
+          type: STRING
+        - name: own_kickoff_recovery_player_name
+          type: STRING
+        - name: blocked_player_id
+          type: STRING
+        - name: blocked_player_name
+          type: STRING
+        - name: tackle_for_loss_1_player_id
+          type: STRING
+        - name: tackle_for_loss_1_player_name
+          type: STRING
+        - name: tackle_for_loss_2_player_id
+          type: STRING
+        - name: tackle_for_loss_2_player_name
+          type: STRING
+        - name: qb_hit_1_player_id
+          type: STRING
+        - name: qb_hit_1_player_name
+          type: STRING
+        - name: qb_hit_2_player_id
+          type: STRING
+        - name: qb_hit_2_player_name
+          type: STRING
+        - name: forced_fumble_player_1_team
+          type: STRING
+        - name: forced_fumble_player_1_player_id
+          type: STRING
+        - name: forced_fumble_player_1_player_name
+          type: STRING
+        - name: forced_fumble_player_2_team
+          type: STRING
+        - name: forced_fumble_player_2_player_id
+          type: STRING
+        - name: forced_fumble_player_2_player_name
+          type: STRING
+        - name: solo_tackle_1_team
+          type: STRING
+        - name: solo_tackle_2_team
+          type: STRING
+        - name: solo_tackle_1_player_id
+          type: STRING
+        - name: solo_tackle_2_player_id
+          type: STRING
+        - name: solo_tackle_1_player_name
+          type: STRING
+        - name: solo_tackle_2_player_name
+          type: STRING
+        - name: assist_tackle_1_player_id
+          type: STRING
+        - name: assist_tackle_1_player_name
+          type: STRING
+        - name: assist_tackle_1_team
+          type: STRING
+        - name: assist_tackle_2_player_id
+          type: STRING
+        - name: assist_tackle_2_player_name
+          type: STRING
+        - name: assist_tackle_2_team
+          type: STRING
+        - name: assist_tackle_3_player_id
+          type: STRING
+        - name: assist_tackle_3_player_name
+          type: STRING
+        - name: assist_tackle_3_team
+          type: STRING
+        - name: assist_tackle_4_player_id
+          type: STRING
+        - name: assist_tackle_4_player_name
+          type: STRING
+        - name: assist_tackle_4_team
+          type: STRING
+        - name: pass_defense_1_player_id
+          type: STRING
+        - name: pass_defense_1_player_name
+          type: STRING
+        - name: pass_defense_2_player_id
+          type: STRING
+        - name: pass_defense_2_player_name
+          type: STRING
+        - name: fumbled_1_team
+          type: STRING
+        - name: fumbled_1_player_id
+          type: STRING
+        - name: fumbled_1_player_name
+          type: STRING
+        - name: fumbled_2_player_id
+          type: STRING
+        - name: fumbled_2_player_name
+          type: STRING
+        - name: fumbled_2_team
+          type: STRING
+        - name: fumble_recovery_1_team
+          type: STRING
+        - name: fumble_recovery_1_yards
+          type: STRING
+        - name: fumble_recovery_1_player_id
+          type: STRING
+        - name: fumble_recovery_1_player_name
+          type: STRING
+        - name: fumble_recovery_2_team
+          type: STRING
+        - name: fumble_recovery_2_yards
+          type: STRING
+        - name: fumble_recovery_2_player_id
+          type: STRING
+        - name: fumble_recovery_2_player_name
+          type: STRING
+        - name: return_team
+          type: STRING
+        - name: return_yards
+          type: STRING
+        - name: penalty_team
+          type: STRING
+        - name: penalty_player_id
+          type: STRING
+        - name: penalty_player_name
+          type: STRING
+        - name: penalty_yards
+          type: STRING
+        - name: replay_or_challenge
+          type: STRING
+        - name: replay_or_challenge_result
+          type: STRING
+        - name: penalty_type
+          type: STRING
+        - name: defensive_two_point_attempt
+          type: STRING
+        - name: defensive_two_point_conv
+          type: STRING
+        - name: defensive_extra_point_attempt
+          type: STRING
+        - name: defensive_extra_point_conv
+          type: STRING
+        - name: season
+          type: STRING
+        - name: cp
+          type: STRING
+        - name: cpoe
+          type: STRING
+        - name: season_type
+          type: STRING
+        - name: week
+          type: STRING
+        - name: game_key
+          type: STRING
+        - name: game_time_eastern
+          type: STRING
+        - name: game_time_local
+          type: STRING
+        - name: iso_time
+          type: STRING
+        - name: game_type
+          type: STRING
+        - name: site_id
+          type: STRING
+        - name: site_city
+          type: STRING
+        - name: site_fullname
+          type: STRING
+        - name: site_state
+          type: STRING
+        - name: roof_type
+          type: STRING
+        - name: drive_start_time
+          type: STRING
+        - name: drive_end_time
+          type: STRING
+        - name: drive_start_yardline
+          type: STRING
+        - name: drive_end_yardline
+          type: STRING
+        - name: drive_how_started
+          type: STRING
+        - name: drive_how_ended
+          type: STRING
+        - name: drive_play_count
+          type: STRING
+        - name: drive_yards_penalized
+          type: STRING
+        - name: drive_time_of_possession
+          type: STRING
+        - name: drive_inside20
+          type: STRING
+        - name: drive_first_downs
+          type: STRING
+        - name: drive_possession_team_abbr
+          type: STRING
+        - name: scoring_team_abbr
+          type: STRING
+        - name: scoring_type
+          type: STRING
+        - name: alert_play_type
+          type: STRING
+        - name: play_type_nfl
+          type: STRING
+        - name: time_of_day
+          type: STRING
+        - name: yards
+          type: STRING
+        - name: end_yardline_side
+          type: STRING
+        - name: end_yardline_number
+          type: STRING
+        - name: series
+          type: STRING
+        - name: series_success
+          type: STRING
+        - name: success
+          type: STRING
+        - name: passer
+          type: STRING
+        - name: rusher
+          type: STRING
+        - name: receiver
+          type: STRING
+        - name: pass
+          type: STRING
+        - name: rush
+          type: STRING
+        - name: name
+          type: STRING
+        - name: first_down
+          type: STRING
+        - name: play
+          type: STRING
+        - name: passer_id
+          type: STRING
+        - name: rusher_id
+          type: STRING
+        - name: receiver_id
+          type: STRING
+        - name: qb_epa
+          type: STRING
+
+  - id: create_plays_typed
+    type: io.kestra.plugin.gcp.bigquery.Query
+    sql: |
+      CREATE OR REPLACE TABLE `{{ kv('GCP_PROJECT_ID') }}.{{ kv('GCP_DATASET') }}.plays`
+      PARTITION BY game_date
+      CLUSTER BY posteam, defteam, season
+      AS
+      SELECT
+        SAFE_CAST(`play_id` AS INT64) AS `play_id`,
+        SAFE_CAST(`game_id` AS INT64) AS `game_id`,
+        `home_team`,
+        `away_team`,
+        `posteam`,
+        `posteam_type`,
+        `defteam`,
+        `side_of_field`,
+        SAFE_CAST(`yardline_100` AS INT64) AS `yardline_100`,
+        SAFE.PARSE_DATE('%Y-%m-%d', `game_date`) AS `game_date`,
+        SAFE_CAST(`quarter_seconds_remaining` AS INT64) AS `quarter_seconds_remaining`,
+        SAFE_CAST(`half_seconds_remaining` AS INT64) AS `half_seconds_remaining`,
+        SAFE_CAST(`game_seconds_remaining` AS INT64) AS `game_seconds_remaining`,
+        `game_half`,
+        SAFE_CAST(`quarter_end` AS INT64) AS `quarter_end`,
+        SAFE_CAST(`drive` AS INT64) AS `drive`,
+        SAFE_CAST(`sp` AS INT64) AS `sp`,
+        SAFE_CAST(`qtr` AS INT64) AS `qtr`,
+        SAFE_CAST(`down` AS INT64) AS `down`,
+        SAFE_CAST(`goal_to_go` AS INT64) AS `goal_to_go`,
+        `time`,
+        `yrdln`,
+        SAFE_CAST(`ydstogo` AS INT64) AS `ydstogo`,
+        SAFE_CAST(`ydsnet` AS INT64) AS `ydsnet`,
+        `desc`,
+        `play_type`,
+        SAFE_CAST(`yards_gained` AS INT64) AS `yards_gained`,
+        SAFE_CAST(`shotgun` AS INT64) AS `shotgun`,
+        SAFE_CAST(`no_huddle` AS INT64) AS `no_huddle`,
+        SAFE_CAST(`qb_dropback` AS INT64) AS `qb_dropback`,
+        SAFE_CAST(`qb_kneel` AS INT64) AS `qb_kneel`,
+        SAFE_CAST(`qb_spike` AS INT64) AS `qb_spike`,
+        SAFE_CAST(`qb_scramble` AS INT64) AS `qb_scramble`,
+        `pass_length`,
+        `pass_location`,
+        SAFE_CAST(`air_yards` AS INT64) AS `air_yards`,
+        SAFE_CAST(`yards_after_catch` AS INT64) AS `yards_after_catch`,
+        `run_location`,
+        `run_gap`,
+        `field_goal_result`,
+        SAFE_CAST(`kick_distance` AS INT64) AS `kick_distance`,
+        `extra_point_result`,
+        `two_point_conv_result`,
+        SAFE_CAST(`home_timeouts_remaining` AS INT64) AS `home_timeouts_remaining`,
+        SAFE_CAST(`away_timeouts_remaining` AS INT64) AS `away_timeouts_remaining`,
+        SAFE_CAST(`timeout` AS INT64) AS `timeout`,
+        `timeout_team`,
+        `td_team`,
+        SAFE_CAST(`posteam_timeouts_remaining` AS INT64) AS `posteam_timeouts_remaining`,
+        SAFE_CAST(`defteam_timeouts_remaining` AS INT64) AS `defteam_timeouts_remaining`,
+        SAFE_CAST(`total_home_score` AS INT64) AS `total_home_score`,
+        SAFE_CAST(`total_away_score` AS INT64) AS `total_away_score`,
+        SAFE_CAST(`posteam_score` AS INT64) AS `posteam_score`,
+        SAFE_CAST(`defteam_score` AS INT64) AS `defteam_score`,
+        SAFE_CAST(`score_differential` AS INT64) AS `score_differential`,
+        SAFE_CAST(`posteam_score_post` AS INT64) AS `posteam_score_post`,
+        SAFE_CAST(`defteam_score_post` AS INT64) AS `defteam_score_post`,
+        SAFE_CAST(`score_differential_post` AS INT64) AS `score_differential_post`,
+        SAFE_CAST(`no_score_prob` AS FLOAT64) AS `no_score_prob`,
+        SAFE_CAST(`opp_fg_prob` AS FLOAT64) AS `opp_fg_prob`,
+        SAFE_CAST(`opp_safety_prob` AS FLOAT64) AS `opp_safety_prob`,
+        SAFE_CAST(`opp_td_prob` AS FLOAT64) AS `opp_td_prob`,
+        SAFE_CAST(`fg_prob` AS FLOAT64) AS `fg_prob`,
+        SAFE_CAST(`safety_prob` AS FLOAT64) AS `safety_prob`,
+        SAFE_CAST(`td_prob` AS FLOAT64) AS `td_prob`,
+        SAFE_CAST(`extra_point_prob` AS FLOAT64) AS `extra_point_prob`,
+        SAFE_CAST(`two_point_conversion_prob` AS FLOAT64) AS `two_point_conversion_prob`,
+        SAFE_CAST(`ep` AS FLOAT64) AS `ep`,
+        SAFE_CAST(`epa` AS FLOAT64) AS `epa`,
+        SAFE_CAST(`total_home_epa` AS FLOAT64) AS `total_home_epa`,
+        SAFE_CAST(`total_away_epa` AS FLOAT64) AS `total_away_epa`,
+        SAFE_CAST(`total_home_rush_epa` AS FLOAT64) AS `total_home_rush_epa`,
+        SAFE_CAST(`total_away_rush_epa` AS FLOAT64) AS `total_away_rush_epa`,
+        SAFE_CAST(`total_home_pass_epa` AS FLOAT64) AS `total_home_pass_epa`,
+        SAFE_CAST(`total_away_pass_epa` AS FLOAT64) AS `total_away_pass_epa`,
+        SAFE_CAST(`air_epa` AS FLOAT64) AS `air_epa`,
+        SAFE_CAST(`yac_epa` AS FLOAT64) AS `yac_epa`,
+        SAFE_CAST(`comp_air_epa` AS FLOAT64) AS `comp_air_epa`,
+        SAFE_CAST(`comp_yac_epa` AS FLOAT64) AS `comp_yac_epa`,
+        SAFE_CAST(`total_home_comp_air_epa` AS FLOAT64) AS `total_home_comp_air_epa`,
+        SAFE_CAST(`total_away_comp_air_epa` AS FLOAT64) AS `total_away_comp_air_epa`,
+        SAFE_CAST(`total_home_comp_yac_epa` AS FLOAT64) AS `total_home_comp_yac_epa`,
+        SAFE_CAST(`total_away_comp_yac_epa` AS FLOAT64) AS `total_away_comp_yac_epa`,
+        SAFE_CAST(`total_home_raw_air_epa` AS FLOAT64) AS `total_home_raw_air_epa`,
+        SAFE_CAST(`total_away_raw_air_epa` AS FLOAT64) AS `total_away_raw_air_epa`,
+        SAFE_CAST(`total_home_raw_yac_epa` AS FLOAT64) AS `total_home_raw_yac_epa`,
+        SAFE_CAST(`total_away_raw_yac_epa` AS FLOAT64) AS `total_away_raw_yac_epa`,
+        SAFE_CAST(`wp` AS FLOAT64) AS `wp`,
+        SAFE_CAST(`def_wp` AS FLOAT64) AS `def_wp`,
+        SAFE_CAST(`home_wp` AS FLOAT64) AS `home_wp`,
+        SAFE_CAST(`away_wp` AS FLOAT64) AS `away_wp`,
+        SAFE_CAST(`wpa` AS FLOAT64) AS `wpa`,
+        SAFE_CAST(`home_wp_post` AS FLOAT64) AS `home_wp_post`,
+        SAFE_CAST(`away_wp_post` AS FLOAT64) AS `away_wp_post`,
+        SAFE_CAST(`total_home_rush_wpa` AS FLOAT64) AS `total_home_rush_wpa`,
+        SAFE_CAST(`total_away_rush_wpa` AS FLOAT64) AS `total_away_rush_wpa`,
+        SAFE_CAST(`total_home_pass_wpa` AS FLOAT64) AS `total_home_pass_wpa`,
+        SAFE_CAST(`total_away_pass_wpa` AS FLOAT64) AS `total_away_pass_wpa`,
+        SAFE_CAST(`air_wpa` AS FLOAT64) AS `air_wpa`,
+        SAFE_CAST(`yac_wpa` AS FLOAT64) AS `yac_wpa`,
+        SAFE_CAST(`comp_air_wpa` AS FLOAT64) AS `comp_air_wpa`,
+        SAFE_CAST(`comp_yac_wpa` AS FLOAT64) AS `comp_yac_wpa`,
+        SAFE_CAST(`total_home_comp_air_wpa` AS FLOAT64) AS `total_home_comp_air_wpa`,
+        SAFE_CAST(`total_away_comp_air_wpa` AS FLOAT64) AS `total_away_comp_air_wpa`,
+        SAFE_CAST(`total_home_comp_yac_wpa` AS FLOAT64) AS `total_home_comp_yac_wpa`,
+        SAFE_CAST(`total_away_comp_yac_wpa` AS FLOAT64) AS `total_away_comp_yac_wpa`,
+        SAFE_CAST(`total_home_raw_air_wpa` AS FLOAT64) AS `total_home_raw_air_wpa`,
+        SAFE_CAST(`total_away_raw_air_wpa` AS FLOAT64) AS `total_away_raw_air_wpa`,
+        SAFE_CAST(`total_home_raw_yac_wpa` AS FLOAT64) AS `total_home_raw_yac_wpa`,
+        SAFE_CAST(`total_away_raw_yac_wpa` AS FLOAT64) AS `total_away_raw_yac_wpa`,
+        SAFE_CAST(`punt_blocked` AS INT64) AS `punt_blocked`,
+        SAFE_CAST(`first_down_rush` AS INT64) AS `first_down_rush`,
+        SAFE_CAST(`first_down_pass` AS INT64) AS `first_down_pass`,
+        SAFE_CAST(`first_down_penalty` AS INT64) AS `first_down_penalty`,
+        SAFE_CAST(`third_down_converted` AS INT64) AS `third_down_converted`,
+        SAFE_CAST(`third_down_failed` AS INT64) AS `third_down_failed`,
+        SAFE_CAST(`fourth_down_converted` AS INT64) AS `fourth_down_converted`,
+        SAFE_CAST(`fourth_down_failed` AS INT64) AS `fourth_down_failed`,
+        SAFE_CAST(`incomplete_pass` AS INT64) AS `incomplete_pass`,
+        SAFE_CAST(`touchback` AS INT64) AS `touchback`,
+        SAFE_CAST(`interception` AS INT64) AS `interception`,
+        SAFE_CAST(`punt_inside_twenty` AS INT64) AS `punt_inside_twenty`,
+        SAFE_CAST(`punt_in_endzone` AS INT64) AS `punt_in_endzone`,
+        SAFE_CAST(`punt_out_of_bounds` AS INT64) AS `punt_out_of_bounds`,
+        SAFE_CAST(`punt_downed` AS INT64) AS `punt_downed`,
+        SAFE_CAST(`punt_fair_catch` AS INT64) AS `punt_fair_catch`,
+        SAFE_CAST(`kickoff_inside_twenty` AS INT64) AS `kickoff_inside_twenty`,
+        SAFE_CAST(`kickoff_in_endzone` AS INT64) AS `kickoff_in_endzone`,
+        SAFE_CAST(`kickoff_out_of_bounds` AS INT64) AS `kickoff_out_of_bounds`,
+        SAFE_CAST(`kickoff_downed` AS INT64) AS `kickoff_downed`,
+        SAFE_CAST(`kickoff_fair_catch` AS INT64) AS `kickoff_fair_catch`,
+        SAFE_CAST(`fumble_forced` AS INT64) AS `fumble_forced`,
+        SAFE_CAST(`fumble_not_forced` AS INT64) AS `fumble_not_forced`,
+        SAFE_CAST(`fumble_out_of_bounds` AS INT64) AS `fumble_out_of_bounds`,
+        SAFE_CAST(`solo_tackle` AS INT64) AS `solo_tackle`,
+        SAFE_CAST(`safety` AS INT64) AS `safety`,
+        SAFE_CAST(`penalty` AS INT64) AS `penalty`,
+        SAFE_CAST(`tackled_for_loss` AS INT64) AS `tackled_for_loss`,
+        SAFE_CAST(`fumble_lost` AS INT64) AS `fumble_lost`,
+        SAFE_CAST(`own_kickoff_recovery` AS INT64) AS `own_kickoff_recovery`,
+        SAFE_CAST(`own_kickoff_recovery_td` AS INT64) AS `own_kickoff_recovery_td`,
+        SAFE_CAST(`qb_hit` AS INT64) AS `qb_hit`,
+        SAFE_CAST(`rush_attempt` AS INT64) AS `rush_attempt`,
+        SAFE_CAST(`pass_attempt` AS INT64) AS `pass_attempt`,
+        SAFE_CAST(`sack` AS INT64) AS `sack`,
+        SAFE_CAST(`touchdown` AS INT64) AS `touchdown`,
+        SAFE_CAST(`pass_touchdown` AS INT64) AS `pass_touchdown`,
+        SAFE_CAST(`rush_touchdown` AS INT64) AS `rush_touchdown`,
+        SAFE_CAST(`return_touchdown` AS INT64) AS `return_touchdown`,
+        SAFE_CAST(`extra_point_attempt` AS INT64) AS `extra_point_attempt`,
+        SAFE_CAST(`two_point_attempt` AS INT64) AS `two_point_attempt`,
+        SAFE_CAST(`field_goal_attempt` AS INT64) AS `field_goal_attempt`,
+        SAFE_CAST(`kickoff_attempt` AS INT64) AS `kickoff_attempt`,
+        SAFE_CAST(`punt_attempt` AS INT64) AS `punt_attempt`,
+        SAFE_CAST(`fumble` AS INT64) AS `fumble`,
+        SAFE_CAST(`complete_pass` AS INT64) AS `complete_pass`,
+        SAFE_CAST(`assist_tackle` AS INT64) AS `assist_tackle`,
+        SAFE_CAST(`lateral_reception` AS INT64) AS `lateral_reception`,
+        SAFE_CAST(`lateral_rush` AS INT64) AS `lateral_rush`,
+        SAFE_CAST(`lateral_return` AS INT64) AS `lateral_return`,
+        SAFE_CAST(`lateral_recovery` AS INT64) AS `lateral_recovery`,
+        `passer_player_id`,
+        `passer_player_name`,
+        `receiver_player_id`,
+        `receiver_player_name`,
+        `rusher_player_id`,
+        `rusher_player_name`,
+        `lateral_receiver_player_id`,
+        `lateral_receiver_player_name`,
+        `lateral_rusher_player_id`,
+        `lateral_rusher_player_name`,
+        `lateral_sack_player_id`,
+        `lateral_sack_player_name`,
+        `interception_player_id`,
+        `interception_player_name`,
+        `lateral_interception_player_id`,
+        `lateral_interception_player_name`,
+        `punt_returner_player_id`,
+        `punt_returner_player_name`,
+        `lateral_punt_returner_player_id`,
+        `lateral_punt_returner_player_name`,
+        `kickoff_returner_player_name`,
+        `kickoff_returner_player_id`,
+        `lateral_kickoff_returner_player_id`,
+        `lateral_kickoff_returner_player_name`,
+        `punter_player_id`,
+        `punter_player_name`,
+        `kicker_player_name`,
+        `kicker_player_id`,
+        `own_kickoff_recovery_player_id`,
+        `own_kickoff_recovery_player_name`,
+        `blocked_player_id`,
+        `blocked_player_name`,
+        `tackle_for_loss_1_player_id`,
+        `tackle_for_loss_1_player_name`,
+        `tackle_for_loss_2_player_id`,
+        `tackle_for_loss_2_player_name`,
+        `qb_hit_1_player_id`,
+        `qb_hit_1_player_name`,
+        `qb_hit_2_player_id`,
+        `qb_hit_2_player_name`,
+        `forced_fumble_player_1_team`,
+        `forced_fumble_player_1_player_id`,
+        `forced_fumble_player_1_player_name`,
+        `forced_fumble_player_2_team`,
+        `forced_fumble_player_2_player_id`,
+        `forced_fumble_player_2_player_name`,
+        `solo_tackle_1_team`,
+        `solo_tackle_2_team`,
+        `solo_tackle_1_player_id`,
+        `solo_tackle_2_player_id`,
+        `solo_tackle_1_player_name`,
+        `solo_tackle_2_player_name`,
+        `assist_tackle_1_player_id`,
+        `assist_tackle_1_player_name`,
+        `assist_tackle_1_team`,
+        `assist_tackle_2_player_id`,
+        `assist_tackle_2_player_name`,
+        `assist_tackle_2_team`,
+        `assist_tackle_3_player_id`,
+        `assist_tackle_3_player_name`,
+        `assist_tackle_3_team`,
+        `assist_tackle_4_player_id`,
+        `assist_tackle_4_player_name`,
+        `assist_tackle_4_team`,
+        `pass_defense_1_player_id`,
+        `pass_defense_1_player_name`,
+        `pass_defense_2_player_id`,
+        `pass_defense_2_player_name`,
+        `fumbled_1_team`,
+        `fumbled_1_player_id`,
+        `fumbled_1_player_name`,
+        `fumbled_2_player_id`,
+        `fumbled_2_player_name`,
+        `fumbled_2_team`,
+        `fumble_recovery_1_team`,
+        SAFE_CAST(`fumble_recovery_1_yards` AS INT64) AS `fumble_recovery_1_yards`,
+        `fumble_recovery_1_player_id`,
+        `fumble_recovery_1_player_name`,
+        `fumble_recovery_2_team`,
+        SAFE_CAST(`fumble_recovery_2_yards` AS INT64) AS `fumble_recovery_2_yards`,
+        `fumble_recovery_2_player_id`,
+        `fumble_recovery_2_player_name`,
+        `return_team`,
+        SAFE_CAST(`return_yards` AS INT64) AS `return_yards`,
+        `penalty_team`,
+        `penalty_player_id`,
+        `penalty_player_name`,
+        SAFE_CAST(`penalty_yards` AS INT64) AS `penalty_yards`,
+        SAFE_CAST(`replay_or_challenge` AS INT64) AS `replay_or_challenge`,
+        `replay_or_challenge_result`,
+        `penalty_type`,
+        SAFE_CAST(`defensive_two_point_attempt` AS INT64) AS `defensive_two_point_attempt`,
+        SAFE_CAST(`defensive_two_point_conv` AS INT64) AS `defensive_two_point_conv`,
+        SAFE_CAST(`defensive_extra_point_attempt` AS INT64) AS `defensive_extra_point_attempt`,
+        SAFE_CAST(`defensive_extra_point_conv` AS INT64) AS `defensive_extra_point_conv`,
+        SAFE_CAST(`season` AS INT64) AS `season`,
+        SAFE_CAST(`cp` AS FLOAT64) AS `cp`,
+        SAFE_CAST(`cpoe` AS FLOAT64) AS `cpoe`,
+        `season_type`,
+        SAFE_CAST(`week` AS INT64) AS `week`,
+        SAFE_CAST(`game_key` AS INT64) AS `game_key`,
+        `game_time_eastern`,
+        `game_time_local`,
+        SAFE_CAST(`iso_time` AS INT64) AS `iso_time`,
+        `game_type`,
+        SAFE_CAST(`site_id` AS INT64) AS `site_id`,
+        `site_city`,
+        `site_fullname`,
+        `site_state`,
+        `roof_type`,
+        `drive_start_time`,
+        `drive_end_time`,
+        `drive_start_yardline`,
+        `drive_end_yardline`,
+        `drive_how_started`,
+        `drive_how_ended`,
+        SAFE_CAST(`drive_play_count` AS INT64) AS `drive_play_count`,
+        SAFE_CAST(`drive_yards_penalized` AS INT64) AS `drive_yards_penalized`,
+        `drive_time_of_possession`,
+        SAFE_CAST(`drive_inside20` AS INT64) AS `drive_inside20`,
+        SAFE_CAST(`drive_first_downs` AS INT64) AS `drive_first_downs`,
+        `drive_possession_team_abbr`,
+        `scoring_team_abbr`,
+        `scoring_type`,
+        `alert_play_type`,
+        `play_type_nfl`,
+        `time_of_day`,
+        SAFE_CAST(`yards` AS INT64) AS `yards`,
+        `end_yardline_side`,
+        SAFE_CAST(`end_yardline_number` AS INT64) AS `end_yardline_number`,
+        SAFE_CAST(`series` AS INT64) AS `series`,
+        SAFE_CAST(`series_success` AS INT64) AS `series_success`,
+        SAFE_CAST(`success` AS INT64) AS `success`,
+        `passer`,
+        `rusher`,
+        `receiver`,
+        SAFE_CAST(`pass` AS INT64) AS `pass`,
+        SAFE_CAST(`rush` AS INT64) AS `rush`,
+        `name`,
+        SAFE_CAST(`first_down` AS INT64) AS `first_down`,
+        SAFE_CAST(`play` AS INT64) AS `play`,
+        `passer_id`,
+        `rusher_id`,
+        `receiver_id`,
+        SAFE_CAST(`qb_epa` AS FLOAT64) AS `qb_epa`
+      FROM `{{ kv('GCP_PROJECT_ID') }}.{{ kv('GCP_DATASET') }}.plays_staging`
+      WHERE SAFE.PARSE_DATE('%Y-%m-%d', game_date) IS NOT NULL
