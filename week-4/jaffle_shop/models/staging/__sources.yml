@@ -1,0 +1,12 @@
+version: 2
+
+# Try using these source definitions instead!
+sources:
+  - name: raw_data
+    description: Raw data for the nyc taxi trips
+    database: de-zoomcamp-501902
+    schema: demo_dataset
+    tables:
+      - name: yellow_tripdata_partitioned_clustered
+      - name: green_tripdata_partitioned_clustered
+

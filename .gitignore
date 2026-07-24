@@ -7,4 +7,3 @@ logs/*.log
 __pycache__/
 *.py[cod]
 logs/queries
-week-4
