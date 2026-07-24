@@ -1,0 +1,39 @@
+version: 2
+
+sources:
+  - name: nfl_raw
+    description: >
+      NFL tables in BigQuery demo_dataset (loaded via Kestra from GCS).
+      plays is partitioned by game_date; players and teams are unpartitioned.
+    database: "{{ var('raw_project') }}"
+    schema: "{{ var('raw_dataset') }}"
+    tables:
+      - name: plays
+        description: One row per NFL play; partitioned by game_date.
+        columns:
+          - name: game_id
+            tests: [not_null]
+          - name: play_id
+            tests: [not_null]
+          - name: game_date
+            tests: [not_null]
+
+      - name: players
+        description: Player roster records by season and team.
+        columns:
+          - name: nflId
+            tests: [not_null]
+          - name: season
+            tests: [not_null]
+          - name: teamId
+            tests: [not_null]
+
+      - name: teams
+        description: Team attributes by season.
+        columns:
+          - name: season
+            tests: [not_null]
+          - name: teamId
+            tests: [not_null]
+          - name: abbr
+            tests: [not_null]

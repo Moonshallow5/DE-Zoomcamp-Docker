@@ -1,0 +1,30 @@
+name: nfl_play_by_play
+version: "1.0.0"
+config-version: 2
+
+profile: nfl_play_by_play
+
+model-paths: ["models"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+clean-targets:
+  - target
+  - dbt_packages
+
+vars:
+  # Raw tables live in BigQuery: de-zoomcamp-501902.demo_dataset.{plays,players,teams}
+  raw_project: "{{ env_var('DBT_RAW_PROJECT', 'de-zoomcamp-501902') }}"
+  raw_dataset: "{{ env_var('DBT_RAW_DATASET', 'demo_dataset') }}"
+
+models:
+  nfl_play_by_play:
+    staging:
+      +materialized: view
+      +schema: staging
+    marts:
+      core:
+        +materialized: table
+        +schema: marts
+      reporting:
+        +materialized: table
+        +schema: reporting

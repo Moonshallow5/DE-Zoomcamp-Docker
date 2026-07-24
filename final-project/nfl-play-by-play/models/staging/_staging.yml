@@ -1,0 +1,41 @@
+version: 2
+
+models:
+  - name: stg_nfl__plays
+    description: Clean, consistently named subset of play-by-play fields.
+    columns:
+      - name: game_id
+        tests: [not_null]
+      - name: play_id
+        tests: [not_null]
+      - name: game_date
+        tests: [not_null]
+      - name: season
+        tests: [not_null]
+      - name: play_type
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['pass', 'run', 'punt', 'field_goal', 'kickoff', 'extra_point', 'qb_kneel', 'qb_spike', 'no_play']
+              config:
+                severity: warn
+
+  - name: stg_nfl__players
+    description: Player roster records with snake_case identifiers.
+    columns:
+      - name: nfl_id
+        tests: [not_null]
+      - name: season
+        tests: [not_null]
+      - name: team_id
+        tests: [not_null]
+
+  - name: stg_nfl__teams
+    description: Team attributes with one record per team and season.
+    columns:
+      - name: season
+        tests: [not_null]
+      - name: team_id
+        tests: [not_null]
+      - name: team_abbr
+        tests: [not_null]

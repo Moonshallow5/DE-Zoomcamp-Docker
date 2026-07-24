@@ -1,0 +1,56 @@
+version: 2
+
+models:
+  - name: dim_teams
+    description: Team dimension at team-season grain.
+    columns:
+      - name: team_season_key
+        tests: [not_null, unique]
+
+  - name: dim_players
+    description: Player roster dimension at player-season-team grain.
+    columns:
+      - name: player_season_team_key
+        tests: [not_null, unique]
+
+  - name: fct_plays
+    description: Enriched play fact table, partitioned by game date and clustered for common filters.
+    columns:
+      - name: play_key
+        tests: [not_null, unique]
+      - name: game_date
+        tests: [not_null]
+
+  - name: mart_team_season_performance
+    description: Dashboard-ready offensive efficiency metrics by team and season.
+    columns:
+      - name: season
+        tests: [not_null]
+      - name: team_abbr
+        tests: [not_null]
+
+  - name: mart_quarterback_season
+    description: Quarterback passing volume and efficiency by season and team.
+    columns:
+      - name: passer_gsis_id
+        tests: [not_null]
+
+  - name: mart_weekly_play_trends
+    description: Weekly team and play-type trends for time-series dashboard charts.
+    columns:
+      - name: week_start_date
+        tests: [not_null]
+
+exposures:
+  - name: nfl_performance_dashboard
+    label: NFL Performance Dashboard
+    type: dashboard
+    maturity: medium
+    description: Looker Studio dashboard for team, quarterback, and weekly play trends.
+    depends_on:
+      - ref('mart_team_season_performance')
+      - ref('mart_quarterback_season')
+      - ref('mart_weekly_play_trends')
+    owner:
+      name: Sandeep
+      email: ssandeepssingh55@gmail.com
