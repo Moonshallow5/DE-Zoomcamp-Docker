@@ -40,3 +40,9 @@ Charts included:
 - QB bar chart — `avg_epa_per_attempt` by quarterback (`mart_quarterback_season`)
 - Team bar chart — `avg_epa_per_play` by team (`mart_team_season_performance`)
 - Weekly time series — EPA over time (`mart_weekly_play_trends`)
+
+Flow Image:
+
+
+<img width="800" height="200" alt="dde-zoomcamp" src="https://github.com/user-attachments/assets/2a14f430-5ab3-4c79-9123-9aba79cd9bca" />
+
